@@ -3,4 +3,8 @@ export default class ship {
         this.length = length;
         this.hits = 0;
     }
+
+    hit() {
+        this.hits++;
+    }
 }
