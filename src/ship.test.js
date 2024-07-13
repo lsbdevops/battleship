@@ -36,7 +36,7 @@ test('Ship of length 1 - sunk', () => {
 }) 
 
 test('Ship of length 5 - sunk', () => {
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 5; i += 1) {
         testShip5.hit();
     }
     expect(testShip5.isSunk()).toBe(true);
