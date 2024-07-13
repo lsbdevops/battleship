@@ -1,4 +1,4 @@
-export default class ship {
+export default class Ship {
     constructor(length) {
         this.length = length;
         this.hits = 0;
@@ -6,5 +6,9 @@ export default class ship {
 
     hit() {
         this.hits++;
+    }
+
+    isSunk() {
+        return this.length <= this.hits;
     }
 }
