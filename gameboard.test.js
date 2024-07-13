@@ -19,3 +19,9 @@ test('Create 10 x 10 gameboard (don\'t check coordinates)', () => {
     const gameboardTest = new Gameboard(10, 10);
     expect(gameboardTest).toEqual(expect.objectContaining({ height: 10, width: 10 }));
 })
+
+test('Attack coordinates x = 1, y = 1', () => {
+    const gameboardTest = new Gameboard(10, 10);
+    gameboardTest.receiveAttack(1, 1);
+    expect(gameboardTest.boardCoordinates[1][1]).toEqual({ isAttacked: true, ship: null });
+})

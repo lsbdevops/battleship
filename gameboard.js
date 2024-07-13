@@ -9,4 +9,8 @@ export default class Gameboard {
         }
         this.boardCoordinates = boardCoordinates;
     }
+
+    receiveAttack(x, y) {
+        this.boardCoordinates[x][y].isAttacked = true;
+    }
 }
