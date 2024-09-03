@@ -16,8 +16,21 @@ export default class Gameboard {
         this.boardCoordinates[x][y].isAttacked = true;
     }
 
-    placeShip(x, y, shipLength = 1) {
+    placeShip(x, y, shipLength = 1, orientation = 'horizontal') {
         const ship = new Ship(shipLength);
-        this.boardCoordinates[x][y].ship = ship; 
+
+        if (shipLength === 1) {
+            this.boardCoordinates[x][y].ship = ship;
+            return;
+        }
+
+        for (let i = 0; i < shipLength; i += 1) {
+            if (orientation === 'horizontal') {
+                this.boardCoordinates[x + i][y].ship = ship;
+            }
+            else {
+                this.boardCoordinates[x][y + i].ship = ship;
+            }
+        } 
     }
 }
