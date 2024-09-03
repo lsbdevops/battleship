@@ -25,3 +25,17 @@ test('Attack coordinates x = 1, y = 1', () => {
     gameboardTest.receiveAttack(1, 1);
     expect(gameboardTest.boardCoordinates[1][1]).toEqual({ isAttacked: true, ship: null });
 })
+
+test('Place ship of length 1 at x = 1, y = 1', () => {
+    const gameboardTest = new Gameboard(10, 10);
+    gameboardTest.placeShip(1, 1);
+    const testShip = { length: 1, hits: 0 }; 
+    expect(gameboardTest.boardCoordinates[1][1]).toEqual({ isAttacked: false, ship: testShip });
+})
+
+test('Place ship of length 1 at x = 1, y = 1', () => {
+    const gameboardTest = new Gameboard(10, 10);
+    gameboardTest.placeShip(1, 1);
+    const testShip = { length: 1, hits: 0 }; 
+    expect(gameboardTest.boardCoordinates[1][1]).toEqual({ isAttacked: false, ship: testShip });
+})

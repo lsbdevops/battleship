@@ -1,3 +1,5 @@
+import Ship from './ship'
+
 export default class Gameboard {
     constructor(height, width) {
         this.height = height;
@@ -12,5 +14,10 @@ export default class Gameboard {
 
     receiveAttack(x, y) {
         this.boardCoordinates[x][y].isAttacked = true;
+    }
+
+    placeShip(x, y, shipLength = 1) {
+        const ship = new Ship(shipLength);
+        this.boardCoordinates[x][y].ship = ship; 
     }
 }
