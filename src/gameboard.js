@@ -14,6 +14,10 @@ export default class Gameboard {
 
     receiveAttack(x, y) {
         this.boardCoordinates[x][y].isAttacked = true;
+        const shipAtCoords = this.boardCoordinates[x][y].ship;
+        if (shipAtCoords) {
+            this.boardCoordinates[x][y].ship.hit();
+        }
     }
 
     placeShip(x, y, shipLength = 1, orientation = 'horizontal') {

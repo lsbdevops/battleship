@@ -55,3 +55,11 @@ test('Place ship of length 2 (vertically) at x = 1, y = 1', () => {
     expect(gameboardTest.boardCoordinates[1][1]).toEqual({ isAttacked: false, ship: testShip });
     expect(gameboardTest.boardCoordinates[1][2]).toEqual({ isAttacked: false, ship: testShip });
 })
+
+test('Attack ship at x = 1, y = 1', () => {
+    const gameboardTest = new Gameboard(10, 10);
+    gameboardTest.placeShip(1, 1);
+    gameboardTest.receiveAttack(1, 1);
+    const testShip = { length: 1, hits: 1 }; 
+    expect(gameboardTest.boardCoordinates[1][1]).toEqual({ isAttacked: true, ship: testShip });
+})
