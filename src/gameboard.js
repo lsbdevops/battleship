@@ -4,6 +4,7 @@ export default class Gameboard {
     constructor(height, width) {
         this.height = height;
         this.width = width;
+        this.ships = [];
 
         const boardCoordinates = new Array(width);
         for (let i = 0; i < boardCoordinates.length; i += 1) {
@@ -22,6 +23,7 @@ export default class Gameboard {
 
     placeShip(x, y, shipLength = 1, orientation = 'horizontal') {
         const ship = new Ship(shipLength);
+        this.ships.push(ship);
 
         if (shipLength === 1) {
             this.boardCoordinates[x][y].ship = ship;
@@ -36,5 +38,9 @@ export default class Gameboard {
                 this.boardCoordinates[x][y + i].ship = ship;
             }
         } 
+    }
+
+    allShipsSunk() {
+        return this.ships.every((currentShip) => currentShip.isSunk());
     }
 }
