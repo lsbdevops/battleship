@@ -16,16 +16,17 @@ header, footer, div {
 
 .game-board-container {
     height: 100%;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-content: center;
     align-items: center;
-    justify-content: center;
 }
 
 .game-board {
     display: grid;
-    grid-template-columns: repeat(10, 1fr);
+    grid-template-columns: repeat(10, minmax(10px, 60px));
+    justify-content: center;
     max-width: 90%;
-    height: 90%;
 }
 
 .game-cell {
