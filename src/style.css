@@ -41,3 +41,15 @@ header {
     align-items: center;
     justify-content: center;
 }
+
+.ship {
+    background-color: blue;
+}
+
+.attacked {
+    background-color: red;
+}
+
+.ship-attacked {
+    background-color: orange;
+}

@@ -7,8 +7,13 @@ export default class Gameboard {
         this.ships = [];
 
         const boardCoordinates = new Array(width);
-        for (let i = 0; i < boardCoordinates.length; i += 1) {
-            boardCoordinates[i] = new Array(height).fill({ ship: null, isAttacked: false })
+        for (let i = 0; i < width; i += 1) {
+            boardCoordinates[i] = new Array(height);
+
+            for (let j = 0; j < height; j += 1) {
+                const cellData = { ship: null, isAttacked: false };
+                boardCoordinates[i][j] = cellData;
+            }
         }
         this.boardCoordinates = boardCoordinates;
     }
