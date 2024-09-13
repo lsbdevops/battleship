@@ -15,7 +15,7 @@ function createCell(cellData) {
     return cell;
 }
 
-export default function renderGameboard(gameboard) {
+export default function renderGameboard(gameboard, type) {
     // Create wrapper element for gameboard cells.
     const gameboardWrapper = document.createElement('div');
     gameboardWrapper.classList.add('game-board');
@@ -23,11 +23,20 @@ export default function renderGameboard(gameboard) {
     // Create required number of cells and append to wrapper element.
     for (let i = 0; i < gameboard.height; i += 1) {
         for (let j = 0; j < gameboard.width; j += 1) {
-            gameboardWrapper.appendChild(createCell(gameboard.boardCoordinates[i][j]));
+            const cell = createCell(gameboard.boardCoordinates[i][j])
+
+            if (type === 'attacking') {
+                cell.addEventListener('click', () => {
+                    gameboard.receiveAttack(i, j);
+                    document.querySelector(`#${type}`).innerHTML = '';
+                    renderGameboard(gameboard, type);
+                })
+            }
+            gameboardWrapper.appendChild(cell);
         } 
     }
 
     // Add gameboard to DOM.
-    document.querySelector('.game-board-container').appendChild(gameboardWrapper);
+    document.querySelector(`#${type}`).appendChild(gameboardWrapper); 
 }
 

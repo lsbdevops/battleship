@@ -14,13 +14,18 @@ header, footer, div {
     border: 1px solid black;
 }
 
-.game-board-container {
+.game-display {
     height: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-content: center;
     align-items: center;
     justify-items: center;
+}
+
+.game-board-container {
+    display: flex;
+    justify-content: center;
 }
 
 .game-board {
