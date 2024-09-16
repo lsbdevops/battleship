@@ -42,8 +42,8 @@ function renderGameboard(gameboard, type, nextTurnFunc) {
             if (type === 'attacking') {
                 cell.addEventListener('click', () => {
                     gameboard.receiveAttack(i, j);
-                    nextTurnFunc();
                     renderGameboard(gameboard, type, nextTurnFunc);
+                    nextTurnFunc();
                 })
             }
             gameboardWrapper.appendChild(cell);
@@ -55,9 +55,15 @@ function renderGameboard(gameboard, type, nextTurnFunc) {
     document.querySelector(`#${type}`).appendChild(gameboardWrapper); 
 }
 
-function nextTurn(playerOneGameboard) {
+function nextTurn(playerOneGameboard, playerTwoGameboard) {
+    if (playerTwoGameboard.allShipsSunk()) {
+        setTimeout(() => alert('Player wins!'), 0);
+    }
     computerAttacks(playerOneGameboard);
     renderGameboard(playerOneGameboard, 'ship');
+    if (playerOneGameboard.allShipsSunk()) {
+        setTimeout(() => alert('Computer wins!'), 0);
+    }
 }
 
 export default function startGame(playerOne, playerTwo) {
