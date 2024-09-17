@@ -1,3 +1,7 @@
+const SHIPSIZES = [2, 3, 3, 4, 5]
+const BOARDLENGTH = 10;
+
+
 function getRandomCoords() {
     return [Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)]
 }
@@ -66,11 +70,45 @@ function nextTurn(playerOneGameboard, playerTwoGameboard) {
     }
 }
 
-export default function startGame(playerOne, playerTwo) {
-    // Place ships in default (testing) locations.
-    playerOne.gameboard.placeShip(1, 1)
-    playerTwo.gameboard.placeShip(3, 5, 3)
+function validCoords(x, y, length, orientation, gameboard) {
+    if (orientation === 'horizontal') {
+        if ((x + length) > BOARDLENGTH) return false;
+        for (let i = 0; i < length; i += 1) {
+            if (gameboard.boardCoordinates[x + i][y].ship) return false;
+        }
+    }
+    if (orientation === 'vertical') {
+        if ((y + length) > BOARDLENGTH) return false;
+        for (let i = 0; i < length; i += 1) {
+            if (gameboard.boardCoordinates[x][y + i].ship) return false;
+        }
+    }
 
+    return true;
+}
+
+function getRandomOrientation() {
+    return ['horizontal', 'vertical'][Math.floor(Math.random() * 2)];
+}
+
+function placeShips(player) {
+    for (let i = 0; i < SHIPSIZES.length; i += 1) {
+        let [randomX, randomY] = getRandomCoords();
+        const randomOrientation = getRandomOrientation();
+
+        while (!validCoords(randomX, randomY, SHIPSIZES[i], randomOrientation, player.gameboard)) {
+            [randomX, randomY] = getRandomCoords();
+        }
+
+        player.gameboard.placeShip(randomX, randomY, SHIPSIZES[i], randomOrientation);
+    }
+}
+
+export default function startGame(playerOne, playerTwo) {
+    // Place ships in random locations.
+    placeShips(playerOne);
+    placeShips(playerTwo);
+    
     const computersTurn = () => nextTurn(playerOne.gameboard, playerTwo.gameboard);
 
     // Start game by rendering initial gameboards.
