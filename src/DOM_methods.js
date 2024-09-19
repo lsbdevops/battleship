@@ -50,7 +50,7 @@ function renderGameboard(gameboard, type, nextTurnFunc, eventController) {
         for (let j = 0; j < gameboard.width; j += 1) {
             const cell = createCell(gameboard.boardCoordinates[i][j], type)
             
-            if (type === 'attacking') {
+            if (type === 'attacking' && !gameboard.boardCoordinates[i][j].isAttacked) {
                 cell.addEventListener('click', () => cellEventFunc(i, j), {signal: eventController.signal})
             }
             gameboardWrapper.appendChild(cell);
