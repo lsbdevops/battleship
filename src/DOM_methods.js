@@ -33,22 +33,25 @@ function createCell(cellData, gameboardType) {
     return cell;
 }
 
-function renderGameboard(gameboard, type, nextTurnFunc) {
+function renderGameboard(gameboard, type, nextTurnFunc, eventController) {
     // Create wrapper element for gameboard cells.
     const gameboardWrapper = document.createElement('div');
     gameboardWrapper.classList.add('game-board');
+    
+    // Attacking event function.
+    const cellEventFunc = (x, y) => {
+        gameboard.receiveAttack(x, y);
+        renderGameboard(gameboard, type, nextTurnFunc, eventController);
+        nextTurnFunc(eventController);
+    }
 
     // Create required number of cells and append to wrapper element.
     for (let i = 0; i < gameboard.height; i += 1) {
         for (let j = 0; j < gameboard.width; j += 1) {
             const cell = createCell(gameboard.boardCoordinates[i][j], type)
-
+            
             if (type === 'attacking') {
-                cell.addEventListener('click', () => {
-                    gameboard.receiveAttack(i, j);
-                    renderGameboard(gameboard, type, nextTurnFunc);
-                    nextTurnFunc();
-                })
+                cell.addEventListener('click', () => cellEventFunc(i, j), {signal: eventController.signal})
             }
             gameboardWrapper.appendChild(cell);
         } 
@@ -59,13 +62,15 @@ function renderGameboard(gameboard, type, nextTurnFunc) {
     document.querySelector(`#${type}`).appendChild(gameboardWrapper); 
 }
 
-function nextTurn(playerOneGameboard, playerTwoGameboard) {
+function nextTurn(playerOneGameboard, playerTwoGameboard, controller) {
     if (playerTwoGameboard.allShipsSunk()) {
+        controller.abort();
         setTimeout(() => alert('Player wins!'), 0);
     }
     computerAttacks(playerOneGameboard);
     renderGameboard(playerOneGameboard, 'ship');
     if (playerOneGameboard.allShipsSunk()) {
+        controller.abort();
         setTimeout(() => alert('Computer wins!'), 0);
     }
 }
@@ -108,10 +113,14 @@ export default function startGame(playerOne, playerTwo) {
     // Place ships in random locations.
     placeShips(playerOne);
     placeShips(playerTwo);
-    
-    const computersTurn = () => nextTurn(playerOne.gameboard, playerTwo.gameboard);
+
+    // Create abort controller for attacking events.
+    const eventController = new AbortController();
+
+    // Declare function for computer's turn.
+    const computersTurn = () => nextTurn(playerOne.gameboard, playerTwo.gameboard, eventController);
 
     // Start game by rendering initial gameboards.
     renderGameboard(playerOne.gameboard, 'ship');
-    renderGameboard(playerTwo.gameboard, 'attacking', computersTurn);
+    renderGameboard(playerTwo.gameboard, 'attacking', computersTurn, eventController);
 }
