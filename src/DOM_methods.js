@@ -71,12 +71,15 @@ function addEventToCells(gameboardData, attackingEvent) {
         for (let y = 0; y < gameboardData.height; y += 1) {
             // Only add event listener if cell hasn't been previously attacked.
             if (!gameboardData.boardCoordinates[x][y].isAttacked) {
-                cellList[cellIndex].addEventListener(() => attackingEvent(x, y));
+                cellList[cellIndex].addEventListener(() => attackingEvent(gameboardData, x, y));
             }
             cellIndex += 1;
         }
     }
+}
 
+function attackCell(gameboardData, xCoord, yCoord) {
+    gameboardData.receiveAttack(xCoord, yCoord);
 }
 
 function nextTurn(playerOneGameboard, playerTwoGameboard, controller) {
