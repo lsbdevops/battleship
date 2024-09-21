@@ -62,6 +62,23 @@ function renderGameboard(gameboard, type, nextTurnFunc, eventController) {
     document.querySelector(`#${type}`).appendChild(gameboardWrapper); 
 }
 
+function addEventToCells(gameboardData, attackingEvent) {
+    // Get all cells on attacking gameboard.
+    const cellList = Array.from(document.querySelectorAll('#attacking .game-cell'));
+    let cellIndex = 0;
+
+    for (let x = 0; x < gameboardData.width; x += 1) {
+        for (let y = 0; y < gameboardData.height; y += 1) {
+            // Only add event listener if cell hasn't been previously attacked.
+            if (!gameboardData.boardCoordinates[x][y].isAttacked) {
+                cellList[cellIndex].addEventListener(() => attackingEvent(x, y));
+            }
+            cellIndex += 1;
+        }
+    }
+
+}
+
 function nextTurn(playerOneGameboard, playerTwoGameboard, controller) {
     if (playerTwoGameboard.allShipsSunk()) {
         controller.abort();
