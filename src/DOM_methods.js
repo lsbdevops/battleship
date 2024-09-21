@@ -62,7 +62,7 @@ function renderGameboard(gameboard, type, nextTurnFunc, eventController) {
     document.querySelector(`#${type}`).appendChild(gameboardWrapper); 
 }
 
-function addEventToCells(gameboardData, attackingEvent) {
+function addEventToCells(gameboardData, attackingEvent, nextTurnEvent) {
     // Get all cells on attacking gameboard.
     const cellList = Array.from(document.querySelectorAll('#attacking .game-cell'));
     let cellIndex = 0;
@@ -71,7 +71,10 @@ function addEventToCells(gameboardData, attackingEvent) {
         for (let y = 0; y < gameboardData.height; y += 1) {
             // Only add event listener if cell hasn't been previously attacked.
             if (!gameboardData.boardCoordinates[x][y].isAttacked) {
-                cellList[cellIndex].addEventListener(() => attackingEvent(gameboardData, x, y));
+                cellList[cellIndex].addEventListener(() => {
+                    attackingEvent(gameboardData, x, y);
+                    nextTurnEvent();
+                });
             }
             cellIndex += 1;
         }
@@ -79,7 +82,14 @@ function addEventToCells(gameboardData, attackingEvent) {
 }
 
 function attackCell(gameboardData, xCoord, yCoord) {
+    // Update gameboard object.
     gameboardData.receiveAttack(xCoord, yCoord);
+}
+
+function isWinner(playerOneGameboard, playerTwoGameboard) {
+    if (playerTwoGameboard.allShipsSunk()) return 1;
+    if (playerOneGameboard.allShipsSunk()) return 2;
+    return false;
 }
 
 function nextTurn(playerOneGameboard, playerTwoGameboard, controller) {
@@ -144,3 +154,4 @@ export default function startGame(playerOne, playerTwo) {
     renderGameboard(playerOne.gameboard, 'ship');
     renderGameboard(playerTwo.gameboard, 'attacking', computersTurn, eventController);
 }
+
