@@ -41,8 +41,8 @@ function renderGameboard(gameboard, type, nextTurnFunc, eventController) {
     // Attacking event function.
     const cellEventFunc = (x, y) => {
         gameboard.receiveAttack(x, y);
-        renderGameboard(gameboard, type, nextTurnFunc, eventController);
         nextTurnFunc(eventController);
+        renderGameboard(gameboard, type, nextTurnFunc, eventController);
     }
 
     // Create required number of cells and append to wrapper element.
