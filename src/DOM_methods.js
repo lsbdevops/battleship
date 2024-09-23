@@ -154,4 +154,3 @@ export default function startGame(playerOne, playerTwo) {
     renderGameboard(playerOne.gameboard, 'ship');
     renderGameboard(playerTwo.gameboard, 'attacking', computersTurn, eventController);
 }
-
