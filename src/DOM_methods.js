@@ -1,10 +1,8 @@
+import { getRandomCoords, getRandomOrientation } from './DOM_helpers';
+import Gameboard from './DOM_gameboard';
+
 const SHIPSIZES = [2, 3, 3, 4, 5]
 const BOARDLENGTH = 10;
-
-
-function getRandomCoords() {
-    return [Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)]
-}
 
 function computerAttacks(playersGameboard) {
     let [randomX, randomY] = getRandomCoords();
@@ -16,93 +14,8 @@ function computerAttacks(playersGameboard) {
     playersGameboard.receiveAttack(randomX, randomY);
 }
 
-function createCell(cellData, gameboardType) {
-    const cell = document.createElement('div');
-    cell.classList.add('game-cell');
-
-    if (cellData.ship && cellData.isAttacked) {
-        cell.classList.add('ship-attacked');
-    }
-    else if (cellData.ship && gameboardType === 'ship') {
-        cell.classList.add('ship');
-    }
-    else if (cellData.isAttacked) {
-        cell.classList.add('attacked');
-    }
-
-    return cell;
-}
-
-function renderGameboard(gameboard, type, nextTurnFunc, eventController) {
-    // Create wrapper element for gameboard cells.
-    const gameboardWrapper = document.createElement('div');
-    gameboardWrapper.classList.add('game-board');
-    
-    // Attacking event function.
-    const cellEventFunc = (x, y) => {
-        gameboard.receiveAttack(x, y);
-        nextTurnFunc(eventController);
-        renderGameboard(gameboard, type, nextTurnFunc, eventController);
-    }
-
-    // Create required number of cells and append to wrapper element.
-    for (let i = 0; i < gameboard.height; i += 1) {
-        for (let j = 0; j < gameboard.width; j += 1) {
-            const cell = createCell(gameboard.boardCoordinates[i][j], type)
-            
-            if (type === 'attacking' && !gameboard.boardCoordinates[i][j].isAttacked) {
-                cell.addEventListener('click', () => cellEventFunc(i, j), {signal: eventController.signal})
-            }
-            gameboardWrapper.appendChild(cell);
-        } 
-    }
-
-    // Add gameboard to DOM.
-    document.querySelector(`#${type}`).innerHTML = '';
-    document.querySelector(`#${type}`).appendChild(gameboardWrapper); 
-}
-
-function addEventToCells(gameboardData, attackingEvent, nextTurnEvent) {
-    // Get all cells on attacking gameboard.
-    const cellList = Array.from(document.querySelectorAll('#attacking .game-cell'));
-    let cellIndex = 0;
-
-    for (let x = 0; x < gameboardData.width; x += 1) {
-        for (let y = 0; y < gameboardData.height; y += 1) {
-            // Only add event listener if cell hasn't been previously attacked.
-            if (!gameboardData.boardCoordinates[x][y].isAttacked) {
-                cellList[cellIndex].addEventListener(() => {
-                    attackingEvent(gameboardData, x, y);
-                    nextTurnEvent();
-                });
-            }
-            cellIndex += 1;
-        }
-    }
-}
-
-function attackCell(gameboardData, xCoord, yCoord) {
-    // Update gameboard object.
-    gameboardData.receiveAttack(xCoord, yCoord);
-}
-
-function isWinner(playerOneGameboard, playerTwoGameboard) {
-    if (playerTwoGameboard.allShipsSunk()) return 1;
-    if (playerOneGameboard.allShipsSunk()) return 2;
-    return false;
-}
-
-function nextTurn(playerOneGameboard, playerTwoGameboard, controller) {
-    if (playerTwoGameboard.allShipsSunk()) {
-        controller.abort();
-        setTimeout(() => alert('Player wins!'), 0);
-    }
-    computerAttacks(playerOneGameboard);
-    renderGameboard(playerOneGameboard, 'ship');
-    if (playerOneGameboard.allShipsSunk()) {
-        controller.abort();
-        setTimeout(() => alert('Computer wins!'), 0);
-    }
+function isWinner(gameboardOne, gameboardTwo) {
+    return (gameboardOne.allShipsSunk() || gameboardTwo.allShipsSunk())
 }
 
 function validCoords(x, y, length, orientation, gameboard) {
@@ -122,10 +35,6 @@ function validCoords(x, y, length, orientation, gameboard) {
     return true;
 }
 
-function getRandomOrientation() {
-    return ['horizontal', 'vertical'][Math.floor(Math.random() * 2)];
-}
-
 function placeShips(player) {
     for (let i = 0; i < SHIPSIZES.length; i += 1) {
         let [randomX, randomY] = getRandomCoords();
@@ -140,17 +49,30 @@ function placeShips(player) {
 }
 
 export default function startGame(playerOne, playerTwo) {
-    // Place ships in random locations.
     placeShips(playerOne);
     placeShips(playerTwo);
 
-    // Create abort controller for attacking events.
-    const eventController = new AbortController();
+    const playerOneGameboard = Gameboard(playerOne);
+    const playerTwoGameboard = Gameboard(playerTwo);
 
-    // Declare function for computer's turn.
-    const computersTurn = () => nextTurn(playerOne.gameboard, playerTwo.gameboard, eventController);
+    playerTwoGameboard.setTurnEvent(() => {
+        playerTwoGameboard.createGrid();
+        if (isWinner(playerOne.gameboard, playerTwo.gameboard)) {
+            console.log('player 1 wins!');
+            return true;
+        }
 
-    // Start game by rendering initial gameboards.
-    renderGameboard(playerOne.gameboard, 'ship');
-    renderGameboard(playerTwo.gameboard, 'attacking', computersTurn, eventController);
+        computerAttacks(playerOne.gameboard);
+        playerOneGameboard.createGrid();
+        if (isWinner(playerOne.gameboard, playerTwo.gameboard)) {
+            console.log('player 2 wins!');
+            return true;
+        }
+
+        return false;
+    });
+
+    playerOneGameboard.toggleShowShips();
+    playerOneGameboard.createGrid();
+    playerTwoGameboard.createGrid();
 }
