@@ -58,3 +58,8 @@ header {
 .ship-attacked {
     background-color: orange;
 }
+
+#display-winner {
+    font-size: 3rem;
+    letter-spacing: 0.1rem;
+}

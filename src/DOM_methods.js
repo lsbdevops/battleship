@@ -49,6 +49,7 @@ function placeShips(player) {
 }
 
 export default function startGame(playerOne, playerTwo) {
+    const winnerDialog = document.getElementById('display-winner');
     placeShips(playerOne);
     placeShips(playerTwo);
 
@@ -58,14 +59,16 @@ export default function startGame(playerOne, playerTwo) {
     playerTwoGameboard.setTurnEvent(() => {
         playerTwoGameboard.createGrid();
         if (isWinner(playerOne.gameboard, playerTwo.gameboard)) {
-            console.log('player 1 wins!');
+            winnerDialog.innerHTML = 'Player 1 wins!';
+            winnerDialog.showModal();
             return true;
         }
 
         computerAttacks(playerOne.gameboard);
         playerOneGameboard.createGrid();
         if (isWinner(playerOne.gameboard, playerTwo.gameboard)) {
-            console.log('player 2 wins!');
+            winnerDialog.innerHTML = 'Player 2 wins!';
+            winnerDialog.showModal();
             return true;
         }
 
