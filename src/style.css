@@ -14,6 +14,11 @@ header, footer, div {
     border: 1px solid black;
 }
 
+.game-container {
+    display: flex;
+    flex-direction: column;
+}
+
 .game-display {
     height: 100%;
     display: grid;
@@ -23,7 +28,7 @@ header, footer, div {
     justify-items: center;
 }
 
-.game-board-container {
+.game-board-container, .game-toolbar {
     display: flex;
     justify-content: center;
 }
@@ -37,6 +42,10 @@ header, footer, div {
 
 .game-cell {
     aspect-ratio: 1;
+}
+
+#attacking .game-cell:not(.attacked):not(.ship-attacked){
+    cursor: pointer;
 }
 
 header {
@@ -62,4 +71,14 @@ header {
 #display-winner {
     font-size: 3rem;
     letter-spacing: 0.1rem;
+}
+
+#randomise-ships {
+    font-size: 2rem;
+    margin: 5px;
+    padding: 5px 10px;
+}
+
+button:hover {
+    cursor: pointer;
 }
