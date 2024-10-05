@@ -3,7 +3,11 @@ import Player from './player'
 import startGame from './DOM_methods'
 
 // Create players.
-const playerOne = new Player('human');
-const playerTwo = new Player('computer');
+function newGame() {
+    const playerOne = new Player('human');
+    const playerTwo = new Player('computer');
+    startGame(playerOne, playerTwo);
+}
+document.getElementById('randomise-ships').addEventListener('click', () => newGame());
 
-startGame(playerOne, playerTwo);
+newGame();
