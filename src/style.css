@@ -1,5 +1,7 @@
 :root {
+    font-family:Arial, Helvetica, sans-serif;
     font-size: 62.5%;
+    --ship-bg-colour: #43464B;
 }
 
 body {
@@ -10,13 +12,17 @@ body {
     height: 100vh;
 }
 
-header, footer {
-    border: 1px solid black;
+footer {
+    text-shadow: 0px 2px 2px orange, 0px 0px 0.5rem red;
+    box-shadow: inset 0px 0px 7px 9px #b6a9a978, 1px 0px 3rem 3px #db4315;
+    background-color: #000000bf;
 }
 
 .game-container {
     display: flex;
     flex-direction: column;
+    background-color: #262626;
+    z-index: 1;
 }
 
 .game-display {
@@ -63,19 +69,24 @@ header, footer {
 }
 
 header {
-    font-size: 2.5rem;
+    font-size: 3.5rem;
     letter-spacing: 0.2rem;
+    font-weight: bolder;
+    text-shadow: 0px 2px 2px orange, 0px 0px 0.5rem red;
+    box-shadow:  inset 0px 0px 7px 9px #b6a9a978, 1px 0px 3rem 3px #db4315;
+    background-color: #000000bf;
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 2;
 }
 
 .ship {
-    background-color: #43464B;
+    background-color: var(--ship-bg-colour);
 }
 
 .game-cell.ship-attacked {
-    background-color: #43464B;
+    background-color: var(--ship-bg-colour);
 }
 
 
