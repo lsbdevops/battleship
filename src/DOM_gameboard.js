@@ -14,7 +14,9 @@ export default function Gameboard(player) {
 
     const createCell = (cellData) => {
         const cell = document.createElement('div');
+        const pin = document.createElement('div');
         cell.classList.add('game-cell');
+        pin.classList.add('pin');
 
         if (cellData.ship && cellData.isAttacked) {
             cell.classList.add('ship-attacked');
@@ -25,6 +27,7 @@ export default function Gameboard(player) {
         else if (cellData.isAttacked) {
             cell.classList.add('attacked');
         }
+        cell.appendChild(pin);
 
         return cell;
     }

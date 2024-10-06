@@ -10,7 +10,7 @@ body {
     height: 100vh;
 }
 
-header, footer, div {
+header, footer {
     border: 1px solid black;
 }
 
@@ -38,10 +38,24 @@ header, footer, div {
     grid-template-columns: repeat(10, minmax(10px, 60px));
     justify-content: center;
     max-width: 90%;
+    border: 1px solid black;
 }
 
 .game-cell {
+    border: 1px solid black;
+    background-color: #3987c9;
     aspect-ratio: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pin {
+    border: 1px solid black;
+    background-color: black;
+    width: 35%;
+    height: 35%;
+    border-radius: 20px;
 }
 
 #attacking .game-cell:not(.attacked):not(.ship-attacked){
@@ -57,15 +71,22 @@ header {
 }
 
 .ship {
-    background-color: blue;
+    background-color: #43464B;
 }
 
-.attacked {
+.game-cell.ship-attacked {
+    background-color: #43464B;
+}
+
+
+.attacked .pin {
+    background-color: white;
+    box-shadow: inset 0px 0px 5px 2px grey;
+}
+
+.game-cell.ship-attacked .pin {
     background-color: red;
-}
-
-.ship-attacked {
-    background-color: orange;
+    box-shadow: inset 0px 0px 5px 2px darkred;
 }
 
 #display-winner {
