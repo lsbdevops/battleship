@@ -14,6 +14,52 @@ function computerAttacks(playersGameboard) {
     playersGameboard.receiveAttack(randomX, randomY);
 }
 
+function computer(playersGameboard) {
+    let previousMove = null;
+
+    const getRandomXY = () => {
+        let [randomX, randomY] = getRandomCoords();
+
+        while (playersGameboard.boardCoordinates[randomX][randomY].isAttacked) {
+            [randomX, randomY] = getRandomCoords();
+        }
+
+        return [randomX, randomY];
+    }
+
+    const getSmartXY = () => {
+        const { x, y } = previousMove;
+
+        if ((x > 0) && !playersGameboard.boardCoordinates[x - 1][y].isAttacked) return [x - 1, y]
+        if ((x + 1 < BOARDLENGTH) && !playersGameboard.boardCoordinates[x + 1][y].isAttacked) return [x + 1, y]
+        if ((y > 0) && !playersGameboard.boardCoordinates[x][y - 1].isAttacked) return [x, y - 1]
+        if ((y + 1 < BOARDLENGTH) && !playersGameboard.boardCoordinates[x][y + 1].isAttacked) return [x, y + 1]
+        
+        previousMove = null;
+        return getRandomXY();
+    }
+
+    const attack = () => {
+        let x = null;
+        let y = null;
+
+        if (previousMove === null) {
+            [x, y] = getRandomXY(); 
+        }
+        else {
+            [x, y] = getSmartXY();
+        }
+
+        const shipIsHit = playersGameboard.receiveAttack(x, y);
+
+        if (shipIsHit) {
+            previousMove = { x, y };
+        }
+    }
+
+    return { attack };
+}
+
 function isWinner(gameboardOne, gameboardTwo) {
     return (gameboardOne.allShipsSunk() || gameboardTwo.allShipsSunk())
 }
@@ -55,6 +101,7 @@ export default function startGame(playerOne, playerTwo) {
 
     const playerOneGameboard = Gameboard(playerOne);
     const playerTwoGameboard = Gameboard(playerTwo);
+    const computerAI = computer(playerOne.gameboard);
 
     playerTwoGameboard.setTurnEvent(() => {
         playerTwoGameboard.createGrid();
@@ -64,7 +111,7 @@ export default function startGame(playerOne, playerTwo) {
             return true;
         }
 
-        computerAttacks(playerOne.gameboard);
+        computerAI.attack();
         playerOneGameboard.createGrid();
         if (isWinner(playerOne.gameboard, playerTwo.gameboard)) {
             winnerDialog.innerHTML = 'Player 2 wins!';
