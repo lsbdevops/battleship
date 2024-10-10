@@ -4,18 +4,9 @@ import Gameboard from './DOM_gameboard';
 const SHIPSIZES = [2, 3, 3, 4, 5]
 const BOARDLENGTH = 10;
 
-function computerAttacks(playersGameboard) {
-    let [randomX, randomY] = getRandomCoords();
-
-    while (playersGameboard.boardCoordinates[randomX][randomY].isAttacked) {
-        [randomX, randomY] = getRandomCoords();
-    }
-    
-    playersGameboard.receiveAttack(randomX, randomY);
-}
-
 function computer(playersGameboard) {
-    let previousMove = null;
+    let currentMove = null;
+    const moves = [];
 
     const getRandomXY = () => {
         let [randomX, randomY] = getRandomCoords();
@@ -27,33 +18,40 @@ function computer(playersGameboard) {
         return [randomX, randomY];
     }
 
-    const getSmartXY = () => {
-        const { x, y } = previousMove;
+    const getMoves = () => {
+        const { x, y } = currentMove;
 
-        if ((x > 0) && !playersGameboard.boardCoordinates[x - 1][y].isAttacked) return [x - 1, y]
-        if ((x + 1 < BOARDLENGTH) && !playersGameboard.boardCoordinates[x + 1][y].isAttacked) return [x + 1, y]
-        if ((y > 0) && !playersGameboard.boardCoordinates[x][y - 1].isAttacked) return [x, y - 1]
-        if ((y + 1 < BOARDLENGTH) && !playersGameboard.boardCoordinates[x][y + 1].isAttacked) return [x, y + 1]
-        
-        previousMove = null;
-        return getRandomXY();
+        if ((x > 0) && !playersGameboard.boardCoordinates[x - 1][y].isAttacked) moves.push([x - 1, y]);
+        if ((x + 1 < BOARDLENGTH) && !playersGameboard.boardCoordinates[x + 1][y].isAttacked) moves.push([x + 1, y])
+        if ((y > 0) && !playersGameboard.boardCoordinates[x][y - 1].isAttacked) moves.push([x, y - 1])
+        if ((y + 1 < BOARDLENGTH) && !playersGameboard.boardCoordinates[x][y + 1].isAttacked) moves.push([x, y + 1])
     }
 
     const attack = () => {
         let x = null;
         let y = null;
 
-        if (previousMove === null) {
+        if (currentMove === null) {
             [x, y] = getRandomXY(); 
         }
         else {
-            [x, y] = getSmartXY();
+            ({ x, y } = currentMove);
         }
 
         const shipIsHit = playersGameboard.receiveAttack(x, y);
 
         if (shipIsHit) {
-            previousMove = { x, y };
+            currentMove = {x, y};
+            getMoves();
+        }
+        
+        if (moves.length > 0) {
+            const nextMove = moves.shift();
+            [x, y] = nextMove;
+            currentMove = { x, y };
+        }
+        else {
+            currentMove = null;
         }
     }
 
