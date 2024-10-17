@@ -6,7 +6,10 @@ const BOARDLENGTH = 10;
 
 function computer(playersGameboard) {
     let currentMove = null;
-    const moves = [];
+    let horiMoves = [];
+    let vertMoves = [];
+    let direction = null;
+
 
     const getRandomXY = () => {
         let [randomX, randomY] = getRandomCoords();
@@ -21,10 +24,10 @@ function computer(playersGameboard) {
     const getMoves = () => {
         const { x, y } = currentMove;
 
-        if ((x > 0) && !playersGameboard.boardCoordinates[x - 1][y].isAttacked) moves.push([x - 1, y]);
-        if ((x + 1 < BOARDLENGTH) && !playersGameboard.boardCoordinates[x + 1][y].isAttacked) moves.push([x + 1, y])
-        if ((y > 0) && !playersGameboard.boardCoordinates[x][y - 1].isAttacked) moves.push([x, y - 1])
-        if ((y + 1 < BOARDLENGTH) && !playersGameboard.boardCoordinates[x][y + 1].isAttacked) moves.push([x, y + 1])
+        if ((x > 0) && !playersGameboard.boardCoordinates[x - 1][y].isAttacked) horiMoves.push([x - 1, y]);
+        if ((x + 1 < BOARDLENGTH) && !playersGameboard.boardCoordinates[x + 1][y].isAttacked) horiMoves.push([x + 1, y])
+        if ((y > 0) && !playersGameboard.boardCoordinates[x][y - 1].isAttacked) vertMoves.push([x, y - 1])
+        if ((y + 1 < BOARDLENGTH) && !playersGameboard.boardCoordinates[x][y + 1].isAttacked) vertMoves.push([x, y + 1])
     }
 
     const attack = () => {
@@ -43,15 +46,28 @@ function computer(playersGameboard) {
         if (shipIsHit) {
             currentMove = {x, y};
             getMoves();
+
+            if (direction === 'h') {
+                vertMoves = [];
+            }
+            else if (direction === 'v') {
+                horiMoves = [];
+            }
         }
         
-        if (moves.length > 0) {
-            const nextMove = moves.shift();
-            [x, y] = nextMove;
+        if (horiMoves.length > 0) {
+            [x, y] = horiMoves.shift();
             currentMove = { x, y };
+            direction = 'h';
+        }
+        else if (vertMoves.length > 0) {
+            [x, y] = vertMoves.shift();
+            currentMove = { x, y };
+            direction = 'v';
         }
         else {
             currentMove = null;
+            direction = null;
         }
     }
 
