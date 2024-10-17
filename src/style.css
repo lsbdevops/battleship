@@ -2,6 +2,7 @@
     font-family:Arial, Helvetica, sans-serif;
     font-size: 62.5%;
     --ship-bg-colour: #43464B;
+    box-sizing: border-box;
 }
 
 body {
@@ -128,4 +129,21 @@ header {
 
 button:hover {
     cursor: pointer;
+}
+
+@media only screen and (max-width: 500px) {
+    .game-display {
+        grid-template-rows: 1fr 1fr;
+        grid-template-columns: 1fr;
+        row-gap: 10px;
+    }
+    .game-display {
+        margin: 10px;
+    }
+}
+
+@media only screen and (max-height: 750px) {
+    .game-board {
+        max-width: 70%;
+    }
 }
