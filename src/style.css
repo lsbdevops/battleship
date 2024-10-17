@@ -80,17 +80,20 @@ button:hover {
     cursor: pointer;
 }
 
-header {
+header, dialog {
     font-size: 3.5rem;
     letter-spacing: 0.2rem;
     font-weight: bolder;
     text-shadow: 0px 2px 2px orange, 0px 0px 0.5rem red;
     box-shadow:  inset 0px 0px 7px 9px #b6a9a978, 1px 0px 3rem 3px #db4315;
     background-color: #000000bf;
+    z-index: 2;
+}
+
+header {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 2;
 }
 
 .ship {
